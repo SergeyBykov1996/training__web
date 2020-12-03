@@ -249,42 +249,52 @@ window.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const statusMessage = document.createElement('img');    //
+            const statusMessage = document.createElement('img');    
             statusMessage.src = message.loading;
-            statusMessage.style.cssText = `
+            statusMessage.style.cssText = `                         
                 display : block ;
                 margin : 0 auto ;
             `;
             
             form.insertAdjacentElement('afterend', statusMessage);   //svg img status message встанет по середине в нижней форме 
-        
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
 
-            request.setRequestHeader('Content-type', 'application/json');
+        
             const formData = new FormData(form);
 
             const object = {};
                 formData.forEach(function (key,value) {
                     object[key] = value;
                 });
-            
-            const json = JSON.stringify(object);
-            
-            request.send(json);
+                 
 
-            request.addEventListener('load', () => {
-                if(request.status === 200){
-                    console.log(request.response);
-                    showThanksModal(message.success);
-                    form.reset(); // Сбрасывает форму  
-                    statusMessage.remove();
-                }   else {
-                    showThanksModal(message.failure);
-                }
-
-                
+            fetch('server.php', {
+                method: 'POST',     
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            })
+              .then(data => data.text())
+              .then(data =>{
+                console.log(data);
+                showThanksModal(message.success); 
+                statusMessage.remove();
+            }).catch(() => {
+                showThanksModal(message.failure);
+            }).finally(() => {
+                form.reset();       // Сбрасывает форму 
             });
+
+            // request.addEventListener('load', () => {
+            //     if(request.status === 200){
+            //         console.log(request.response);
+            //         showThanksModal(message.success);
+            //         form.reset(); // Сбрасывает форму  
+            //         statusMessage.remove();
+            //     }   else {
+            //         showThanksModal(message.failure);
+            //     }   
+            // });
         }); 
     }
 
@@ -314,4 +324,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     }
 
+
+    fetch('http://localhost:3000/menu')
+      .then(data => data.json())
+      .then(res => console.log(res));
 });    
