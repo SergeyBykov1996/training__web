@@ -1,47 +1,53 @@
-function modal(){
+function openModal(modalSelector){
+    modal = document.querySelector(modalSelector);
+    modal.classList.add('show');
+    modal.classList.remove('hide');
+     document.body.style.overflow = 'hidden';    //Отвечает за прокрутку 
+        // clearInterval(modalTimer);
+}
+
+function closeModal(modalSelector){
+    modal = document.querySelector(modalSelector);
+    modal.classList.add('hide');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+}   
+
+
+function modal(triggerSelector, modalSelector){
         //modal window
 
     
-        const modalTrigger = document.querySelectorAll('[data-modal]'),
-        modal = document.querySelector('.modal'); 
+        const modalTrigger = document.querySelectorAll(triggerSelector),
+        modal = document.querySelector(modalSelector); 
             
-        
-    function openModal(){
-        modal.classList.add('show');
-        modal.classList.remove('hide');
-         document.body.style.overflow = 'hidden';    //Отвечает за прокрутку 
-            // clearInterval(modalTimer);
-    }
+
            
     modalTrigger.forEach(btn => {
-         btn.addEventListener('click', openModal);
+         btn.addEventListener('click', () => openModal(modalSelector));  // Стрелочная функия оборачивает функцию и вызывает ее поле клика 
     });
 
-    function closeModal(){
-        modal.classList.add('hide');
-        modal.classList.remove('show');
-        document.body.style.overflow = '';
-    }    
+     
 
     modal.addEventListener('click', (e) => {
         if (e.target ===  modal || e.target.getAttribute('data-close') == ''){
-            closeModal();
+            closeModal(modalSelector);
         }
     });
 
     document.addEventListener('keydown', (e) => {
         if (e.code === 'Escape' && modal.classList.contains('show')){                         // закроет модалку через escp
-            closeModal();
+            closeModal(modalSelector);
         }
     });
 
 
-    // const modalTimer = setTimeout( openModal, 3000 );
+    // const modalTimer = setTimeout( openModal, 50000 );
     
     function showModalByScroll(){
         if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.       // функция для показа при скроле 
             scrollHeight){
-            openModal();
+            openModal(modalSelector);
             window.removeEventListener('scroll', showModalByScroll);    // Удаляет обработчик показа 
         }
     }
@@ -49,4 +55,6 @@ function modal(){
     window.addEventListener('scroll', showModalByScroll);
 }
 
-module.exports = modal;
+export default modal;
+export {closeModal};
+export {openModal};

@@ -1,9 +1,9 @@
-function tabs(){
+function tabs(tabsSelector,  tabContentSelector, tabParentSelector, activeClass){
     //tabs
     
-    const tab = document.querySelectorAll('.tabheader__item'),
-    tabContent = document.querySelectorAll('.tabcontent'),
-    tabsParent = document.querySelector('.tabheader__items');
+    const tab = document.querySelectorAll(tabsSelector),
+    tabContent = document.querySelectorAll(tabContentSelector),
+    tabsParent = document.querySelector(tabParentSelector);
     
    
     function hideTabContent() {
@@ -13,7 +13,7 @@ function tabs(){
         });
        
         tab.forEach ( item => {
-            item.classList.remove('tabheader__item_active');
+            item.classList.remove(activeClass);
         });
 
     } 
@@ -21,7 +21,7 @@ function tabs(){
     function showTabContent(i = 0) {
         tabContent[i].classList.add('show', 'fade');
         tabContent[i].classList.remove('hide');
-        tab[i].classList.add('tabheader__item_active');
+        tab[i].classList.add(activeClass);
     }
 
     hideTabContent();
@@ -42,4 +42,4 @@ function tabs(){
     });
 }
 
-module.exports = tabs;
+export default tabs;

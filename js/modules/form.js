@@ -1,7 +1,10 @@
-function form(){
+import {openModal, closeModal} from './modal';
+import {postData} from '../services/services';
+
+function form(formSelector){
         //Form
 
-    const forms = document.querySelectorAll('form');
+    const forms = document.querySelectorAll(formSelector);
 
     const message = {
         loading : 'img/form/spinner.svg',
@@ -13,17 +16,7 @@ function form(){
         bindPostData(item);
     });
 
-    const postData = async (url, data ) => {
-        const res = await fetch(url,{           //res Это promiss
-            method: 'POST',     
-            headers: {
-                'Content-type': 'application/json'               // post Data Посылает запрос на сервер , получает ответ и трансформ. ответ в JSON 
-            },
-            body: data
-        });
-     
-        return await res.json();       
-    };
+    
 
     function bindPostData(form){
         form.addEventListener('submit', (e) => {
@@ -57,17 +50,6 @@ function form(){
             }).finally(() => {
                 form.reset();       // Сбрасывает форму 
             });
-
-            // request.addEventListener('load', () => {
-            //     if(request.status === 200){
-            //         console.log(request.response);
-            //         showThanksModal(message.success);
-            //         form.reset(); // Сбрасывает форму  
-            //         statusMessage.remove();
-            //     }   else {
-            //         showThanksModal(message.failure);
-            //     }   
-            // });
         }); 
     }
 
@@ -76,7 +58,7 @@ function form(){
         const prevModalDialog = document.querySelector('.modal__dialog');
         
         prevModalDialog.classList.add('hide');
-        openModal();
+        openModal('.modal');
 
         const thanksModal = document.createElement('div');
 
@@ -93,7 +75,7 @@ function form(){
             thanksModal.remove();
             prevModalDialog.classList.add('show');
             prevModalDialog.classList.remove('hide');
-            closeModal();
+            closeModal('.modal');
         }, 4000);
     }
 
@@ -103,4 +85,4 @@ function form(){
     //   .then(res => console.log(res));
 }
 
-module.exports = form;
+export default form;
